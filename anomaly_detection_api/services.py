@@ -76,13 +76,13 @@ class detectionByUmbralService:
             query = ("select t1.symptom_symptom_id, t2.assesment_level, t1.counter " +
            "from experiment_symptom_register as t1 join symptom as t2 " +
             "on t1.symptom_symptom_id=t2.symptom_id "+
-           "where experiment_experiment_id=%s and t1.symptom_symptom_id not in {} ").format(tuple(susars))
+           "where experiment_experiment_id=%s and t1.symptom_symptom_id not in {} "%(self.experiment_id)).format(tuple(susars))
         else:
             query = ("select t1.symptom_symptom_id, t2.assesment_level, t1.counter " +
            "from experiment_symptom_register as t1 join symptom as t2 " +
             "on t1.symptom_symptom_id=t2.symptom_id "+
-           "where experiment_experiment_id=%s  ")
-        cursor.execute(query, self.experiment_id)
+           "where experiment_experiment_id=%s"%(self.experiment_id))
+        cursor.execute(query)
         rows=self.dictfetchall(cursor)
         return rows
     
