@@ -76,19 +76,20 @@ class detectionByUmbralService:
             query = ("select t1.symptom_symptom_id, t2.assesment_level, t1.counter " +
            "from experiment_symptom_register as t1 join symptom as t2 " +
             "on t1.symptom_symptom_id=t2.symptom_id "+
-           "where experiment_experiment_id=%s and t1.symptom_symptom_id not in {} "%(self.experiment_id)).format(tuple(susars))
+           "where experiment_experiment_id=%s and t1.symptom_symptom_id not in %s "%(self.experiment_id,self.list_susars(susars)))
         else:
             query = ("select t1.symptom_symptom_id, t2.assesment_level, t1.counter " +
            "from experiment_symptom_register as t1 join symptom as t2 " +
             "on t1.symptom_symptom_id=t2.symptom_id "+
            "where experiment_experiment_id=%s"%(self.experiment_id))
+        
         cursor.execute(query)
         rows=self.dictfetchall(cursor)
-        return rows
+        return rows 
     
     #Este metodo trae todos los eventos de un experimento que tengan el mismo sintoma
     def get_events_by_symptom_experitment(self, symptom_id):
-        cursor = connection.cursor()
+        cursor = connection.cursor() 
         query = ("select e.date_reported, co.name, e.age, e.weight, e.height, e.gender, symp.symptom_title  " +
         "from \"event\" as e join symptom_event_register as sympre on e.event_id=sympre.event_event_id " +
         "join country as co on e.country_country_id= co.country_id join symptom as symp on symp.symptom_id=sympre.symptom_symptom_id "+
@@ -128,7 +129,7 @@ class detectionByUmbralService:
             total_weight=total_weight+i['weight']
             total_height=total_height+i['height']
             total_age=total_age+i['age']
-            if(i['gender']=='Hombre'):
+            if(i['gender']=='Masculino'):
                 total_male=total_male+1
             else:
                 total_female=total_female+1
@@ -137,5 +138,12 @@ class detectionByUmbralService:
         row['average_age']=round(total_age/numberevents)
         row['percentage_male']=str(round(total_male/numberevents*100))+'%'
         row['percentage_female']=str(round(total_female/numberevents*100))+'%'
+
+    def list_susars(susars):
+        set_susasrs = '('
+        for i in susars:
+            set_susasrs=set_susasrs+str(i)+','
+        set_susasrs=set_susasrs[:-1]+')'
+        return set_susasrs        
         
    
